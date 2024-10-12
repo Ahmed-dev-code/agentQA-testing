@@ -77,7 +77,6 @@ log :
 had problem with deleting the product from the basket, the element was outside of the viewport, tried to scroll into view but it didn't work. the deleteing button can be visible only when hovering over the basket.
 
 
-please provide more about AQLResponseProxy class, and how to use it.
 
 ### testing with other websites
 #### Jumiia website (arabic version)
@@ -171,3 +170,94 @@ LANGUAGES_QUERY = """
 
 #### youtube website
 navigate to the website, search for a video, click on the video, and print the video title. 
+
+### the chocolate society website
+navigate to the website, get the page titlle, get all the products, and print the product name and price.
+
+code:
+```python
+URL ="https://www.chocolate.co.uk/collections/all"
+
+PRODUCTS_QUERY = """
+{   
+    currency
+    product_items[] {
+        title
+        price
+    }
+}
+"""
+PAGE_TITLE_QUERY = """
+{
+    title
+}
+"""
+PAGE_TITLE_PROMPT = "GET the current PAGE TITLE"
+
+def main():
+    with sync_playwright() as playwright, playwright.chromium.launch(headless=False) as browser:
+        # Create a new page in the browser and wrap it to get access to the AgentQL's querying API
+        page = agentql.wrap(browser.new_page())
+
+        page.goto(URL)
+        
+        page_title = page.query_data(PAGE_TITLE_QUERY)
+        # page_title = page.get_by_prompt(PAGE_TITLE_PROMPT)
+        print(page_title)
+
+        # Use query_data() method to fetch the products from the page
+        response = page.query_data(PRODUCTS_QUERY)
+
+        print(response)
+
+```
+the script doesn't return the page title, it returns 'chocolate society' instead of the page title 'Products'
+i think the problem is with the query, it can be confusing for the agentQL to get the page title.
+
+for the products, the script finds the products elements (using query_elements).
+example of the product element:
+```json
+{
+      "title": {
+        "role": "link",
+        "tf623_id": "748",
+        "html_tag": "a",
+        "name": "Dark Chocolate Ginger",
+        "attributes": {
+          "href": "/products/dark-chocolate-ginger",
+          "class": "product-item-meta__title"
+        }
+      },
+      "price": {
+        "role": "text",
+        "tf623_id": "753",
+        "html_tag": "span",
+        "name": "\u00a35.00",
+        "attributes": {}
+      }
+}
+```
+when trying to get the product name and price using the query_data method, it stucks and doesn't stop (maybe it takes too long to process).
+instead of query_data method, i used to_data() method to get the product name and price from the product element.
+it worked as expected.
+
+code:
+```python
+# Use query_data() method to fetch the products from the page
+        response = page.query_elements(PRODUCTS_QUERY)
+
+        print(response.to_data())
+```
+example of ouput :
+```
+{'currency': 'United Kingdom (GBP £)', 
+'product_items': [{'title': '2.5kg Bulk 41% Milk Hot Chocolate Drops', 'price': '£45.00'}, 
+{'title': '2.5kg Bulk 61% Dark Hot Chocolate Drops', 'price': '£45.00'}, 
+{'title': '41% Milk Hot Chocolate Drops', 'price': '£8.75'}, 
+{'title': '61% Dark Hot Chocolate Drops', 'price': '£8.75'}] 
+}
+```
+
+
+
+
