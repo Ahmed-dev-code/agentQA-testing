@@ -1,17 +1,19 @@
 # AgentQL technical testing report 
 
-## installation
+## Installation
 
-using cli to install.
-the installation was easy and straight forward, starting from installing agentQL using pip, then installing the dependencies using agentQL init command.
-getting the api key was easy and straight forward.
+- Used CLI For the installation.
+- The installation was easy and straight forward, starting from installing agentQL using pip, then installing the dependencies using agentQL init command.
+- Set up the API key: The process for acquiring and setting the API key is simple and can be followed from AgentQL’s documentation.
 
 ## testing
 
-### example_script (provided by agentQL)
+### Example script (provided by agentQL)
 
-the script was so clear and easy to understand, the output was as expected.
-modified the script in order to make adds the product to the basket and print the basket total price.
+The example script provided by AgentQL was well-written and executed as expected. Below are the modifications and additional functionalities tested.
+
+- Adding a Product to the Basket
+I extended the functionality to add a product to the basket and print the total price:
 the added code was:
 ```python
 BASKET_TOTAL_PROMPT = "Basket total"
@@ -36,7 +38,8 @@ def _add_qwillfish_to_cart(page : Page):
 
 worked as expected.
 
-modified the script to delete the product from the basket and print the basket total price.
+- Removing a Product from the Basket
+Next, I modified the script to remove the product from the basket and print the updated total price:
 
 the added code was:
 ```python
@@ -74,13 +77,15 @@ log :
   -   done scrolling
   -   element is outside of the viewport
 
-had problem with deleting the product from the basket, the element was outside of the viewport, tried to scroll into view but it didn't work. the deleteing button can be visible only when hovering over the basket.
+I encountered an issue with removing the product from the basket. The error indicated that the element was outside the viewport and required hovering over the basket for the button to become visible.
 
 
 
 ### testing with other websites
-#### Jumiia website (arabic version)
-navigate to the website, close the popup window, locate the search bar, serach for a product in arabic. and then print the product name and price.
+#### Jumia (Arabic Version)
+
+
+Task: Navigate to the Jumia website, close the popup window, search for a product in Arabic, and print the product name and price.
 
 code:
 ```python
@@ -147,10 +152,28 @@ if __name__ == "__main__":
     main()
 ```
 
-the script worked as expected, the product name and price were printed.
-I reexecuted the script but it didn't work, it was stuck searching for the products.
+The script initially worked as expected, returning product names and prices. However, when re-executed, it got stuck while searching for products. Switching from query_data() to to_data() resolved the issue.
+```python
+# Extract the product data using the AgentQL query
+        response = page.query_elements(PRODUCT_DATA_QUERY)
+
+        # Print the extracted data
+        print(response.to_data())
+```
+the script worked as expected.
+
+output :
+``` json
+{'currency': '7,600 دج', 
+'articles': [{'name': 'حذاء جلد سهل الارتداء مريح للغاية للرجال - أسود', 'price': '7,600 دج'},
+ {'name': 'Bokai Shoes حذاء رجالي -', 'price': '5,500 دج'},
+  {'name': 'Bokai Shoes حذاء رجالي -', 'price': '5,500 دج'}, 
+  ],}
+```
+note : the currency is in arabic, the script didn't return the currency in the correct format.
 
 tried to get the different language version of the website, but the script didn't work, it was stuck.
+
 code :
 ```python
 LANGUAGES_QUERY = """
@@ -167,12 +190,74 @@ LANGUAGES_QUERY = """
         # Print the extracted categories
         print(languages)
 ```
+again the problem is with the query_data method, it takes too long to process.
+replace the query_data method with to_data() method, the script worked as expected.
 
-#### youtube website
-navigate to the website, search for a video, click on the video, and print the video title. 
+code:
+```python
+# Extract the categories using the AgentQL query
+        response = page.query_elements(LANGUAGES_QUERY)
+
+        # Print the extracted categories
+        print(response.to_data())
+```
+
+output:
+```
+{'languaes': [{'name': 'العربية'}, {'name': 'Français'}, {'name': 'Français'}, {'name': 'العربية'}]}
+```
+
+#### YouTube
+
+Task: Navigate to a YouTube video URL and print the video title, channel name, and comments.
+code:
+```python
+QUERY = """
+{
+    video_title
+    video_channel
+    comments[] {
+        comment_text
+        author
+    }
+}
+"""
+
+
+def get_comments():
+    with sync_playwright() as playwright, playwright.chromium.launch(headless=False) as browser:
+        # Create a new page in the browser and wrap it to get access to the AgentQL's querying API
+        page = agentql.wrap(browser.new_page())
+
+        page.goto(URL,timeout=100000)
+
+        for _ in range(5):
+            # Wait for the page to load (helps to load the comments on the video)
+            page.wait_for_page_ready_state()
+
+            # Scroll down the page to load more comments
+            page.keyboard.press("PageDown")
+
+        # Use query_data() method to fetch the comments from the page
+        response = page.query_elements(QUERY)
+
+
+        return response.to_data()
+```
+the script worked as expected (although this script is from the example, the query_data() method got stuck. had to use to_data() method), the video title, channel name, and comments were printed.
+
+output :
+```
+{'video_title': '؟ Docker ليه بنستخدم 💙',
+ 'video_channel': 'Yehia Tech يحيى تك', 
+ 'comments': [{'comment_text': 'فيديوهاتك من كثر ما هي قيمة جدا جدا ،، انا بخاف بيوم من الايام تنمسح .. فبحفظها مباشرة كل ما تنزل عشان ما ضيع مني بيوم من الايام.\nشكرا من كل قلبي. جزاك الله كل خير.', 'author': '@hammam92'}, 
+ 'comment_text': 'شرح واضح ومبسط جداً, اشكرك يامهندس يحيى على هذا المحتوى التعليمي العربي القيم ذو الجوده العاليه, أنت من بعد الله سبب ففي تطور الكثير, استمر و أتمنى لك كل التوفيق.', 'author': '@khalidal-nasser7953']
+}
+```
+
 
 ### the chocolate society website
-navigate to the website, get the page titlle, get all the products, and print the product name and price.
+Task: Navigate to the Chocolate Society website, retrieve the page title, and list all products along with their prices.
 
 code:
 ```python
@@ -248,7 +333,7 @@ code:
 
         print(response.to_data())
 ```
-example of ouput :
+ouput :
 ```
 {'currency': 'United Kingdom (GBP £)', 
 'product_items': [{'title': '2.5kg Bulk 41% Milk Hot Chocolate Drops', 'price': '£45.00'}, 
@@ -258,6 +343,22 @@ example of ouput :
 }
 ```
 
+### Conclusion
 
+AgentQL proves to be a robust and intuitive tool for web scraping and automation. The querying API is user-friendly, enabling smooth interaction with web elements and efficient data extraction. The example script provided by AgentQL worked flawlessly, and I successfully extended its functionality to simulate adding products to a basket. 
+
+While I encountered a challenge with removing items from the basket due to the element being outside the viewport and only visible upon hover, this highlights an edge case that could benefit from refinement.
+
+Beyond the initial script, I tested AgentQL on various websites, including those in different languages, such as Jumia (Arabic), YouTube, and the Chocolate Society website. In most cases, the tool performed well, extracting data and interacting with elements as expected. However, the `query_data()` method occasionally stalled on certain websites. Switching to the `to_data()` method proved to be a reliable alternative and resolved the issue consistently.
+
+In summary, AgentQL offers a powerful solution for web automation and scraping across various platforms and languages. While there are some edge cases that could benefit from optimization, its overall performance, ease of use, and versatility make it an excellent tool for developers. I'm eager to continue exploring its capabilities and potential in more complex scenarios.
+
+### Author
+
+**[Ahmed B]**
+
+*software developer, web scraping and automation enthusiast*
+
+*Date: 12/10/2024*
 
 
