@@ -23,7 +23,7 @@ SEARCH_BOX_QUERY = """
 
 ARTICLE_DATA_QUERY = """
 {
-    price_currency
+    currency
     articles[] {
         name
         price
@@ -62,21 +62,21 @@ def main():
         search_box = page.query_elements(SEARCH_BOX_QUERY)
         print(search_box)
 
-        # Type the search query into the search box
-        search_box.search_products_input.type("حذاء رجال")
-        page.keyboard.press("Enter")
+        # # Type the search query into the search box
+        # search_box.search_products_input.type("حذاء رجال")
+        # page.keyboard.press("Enter")
 
-        # # Extract the product data using the AgentQL query
-        # product_data = page.query_data(ARTICLE_DATA_QUERY)
+        # # # Extract the product data using the AgentQL query
+        # product_data = page.query_elements(ARTICLE_DATA_QUERY)
 
-        # # Print the extracted data
-        # print(product_data)
+        # # # Print the extracted data
+        # print(product_data.to_data())
         
         # Extract the categories using the AgentQL query
-        # languages = page.query_data(LANGUAGES_QUERY)
+        languages = page.query_elements(LANGUAGES_QUERY)
     
         # Print the extracted data
-        # print(languages)
+        print(languages.to_data())
 
 
 if __name__ == "__main__":

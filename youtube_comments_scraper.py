@@ -21,7 +21,7 @@ def get_comments():
         # Create a new page in the browser and wrap it to get access to the AgentQL's querying API
         page = agentql.wrap(browser.new_page())
 
-        page.goto(URL)
+        page.goto(URL,timeout=100000)
 
         for _ in range(5):
             # Wait for the page to load (helps to load the comments on the video)
@@ -31,9 +31,10 @@ def get_comments():
             page.keyboard.press("PageDown")
 
         # Use query_data() method to fetch the comments from the page
-        response = page.query_data(QUERY)
+        response = page.query_elements(QUERY)
 
-        return response
+
+        return response.to_data()
 
 
 
