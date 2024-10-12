@@ -6,12 +6,18 @@ URL ="https://www.chocolate.co.uk/collections/all"
 PRODUCTS_QUERY = """
 {   
     currency
-    products[] {
+    product_items[] {
         title
         price
     }
 }
 """
+PAGE_TITLE_QUERY = """
+{
+    title
+}
+"""
+PAGE_TITLE_PROMPT = "GET the current PAGE TITLE"
 
 def main():
     with sync_playwright() as playwright, playwright.chromium.launch(headless=False) as browser:
@@ -19,11 +25,15 @@ def main():
         page = agentql.wrap(browser.new_page())
 
         page.goto(URL)
+        
+        # page_title = page.query_elements(PAGE_TITLE_QUERY)
+        # page_title = page.get_by_prompt(PAGE_TITLE_PROMPT)
+        # print(page_title)
 
         # Use query_data() method to fetch the products from the page
-        response = page.query_data(PRODUCTS_QUERY)
+        response = page.query_elements(PRODUCTS_QUERY)
 
-        print(response)
+        print(response.to_data())
         
 if __name__ == "__main__":
     main()

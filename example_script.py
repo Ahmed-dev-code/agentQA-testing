@@ -132,13 +132,13 @@ def _add_qwilfish_to_cart(page: Page):
     # Remove from basket
     
     # using query_elements() method to locate the element
-    remove_from_basket_btn = page.query_elements(REMOVE_BASKET_BTN)
+    # remove_from_basket_btn = page.query_elements(REMOVE_BASKET_BTN)
 
-    remove_from_basket_btn.remove_from_basket.click()
-    page.wait_for_timeout(5000)
+    # remove_from_basket_btn.remove_from_basket.click()
+    # page.wait_for_timeout(5000)
     
-    basket_total = page.get_by_prompt(BASKET_TOTAL_PROMPT)
-    print(f'basket total after removing qwilfish : {basket_total.text_content()}')
+    # basket_total = page.get_by_prompt(BASKET_TOTAL_PROMPT)
+    # print(f'basket total after removing qwilfish : {basket_total.text_content()}')
     
 
 
