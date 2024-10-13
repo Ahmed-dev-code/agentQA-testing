@@ -31,10 +31,10 @@ def get_comments():
             page.keyboard.press("PageDown")
 
         # Use query_data() method to fetch the comments from the page
-        response = page.query_elements(QUERY)
+        response = page.query_data(QUERY)
 
 
-        return response.to_data()
+        return response
 
 
 

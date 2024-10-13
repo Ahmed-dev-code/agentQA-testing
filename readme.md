@@ -152,7 +152,7 @@ if __name__ == "__main__":
     main()
 ```
 
-The script initially worked as expected, returning product names and prices. However, when re-executed, it got stuck while searching for products. Switching from query_data() to to_data() resolved the issue.
+The script worked as expected, returning product names and prices. trying with response.to_data() :
 ```python
 # Extract the product data using the AgentQL query
         response = page.query_elements(PRODUCT_DATA_QUERY)
@@ -186,12 +186,16 @@ LANGUAGES_QUERY = """
 
 # Extract the categories using the AgentQL query
         languages = page.query_data(LANGUAGES_QUERY)
-
-        # Print the extracted categories
+    
+        # Print the extracted data
         print(languages)
 ```
-again the problem is with the query_data method, it takes too long to process.
-replace the query_data method with to_data() method, the script worked as expected.
+the script worked as expected.
+
+output:
+```json
+{'languaes': [{'name': 'Français'}, {'name': 'العربية'}]}
+```
 
 code:
 ```python
@@ -244,7 +248,7 @@ def get_comments():
 
         return response.to_data()
 ```
-the script worked as expected (although this script is from the example, the query_data() method got stuck. had to use to_data() method), the video title, channel name, and comments were printed.
+the script worked as expected , the video title, channel name, and comments were printed.
 
 output :
 ```
@@ -286,60 +290,29 @@ def main():
 
         page.goto(URL)
         
-        page_title = page.query_data(PAGE_TITLE_QUERY)
-        # page_title = page.get_by_prompt(PAGE_TITLE_PROMPT)
-        print(page_title)
+        page_title = page.get_by_prompt(PAGE_TITLE_PROMPT)
+        print(page_title.text_content())
 
         # Use query_data() method to fetch the products from the page
         response = page.query_data(PRODUCTS_QUERY)
 
         print(response)
+        
 
 ```
 the script doesn't return the page title, it returns 'chocolate society' instead of the page title 'Products'
 i think the problem is with the query, it can be confusing for the agentQL to get the page title.
 
-for the products, the script finds the products elements (using query_elements).
-example of the product element:
-```json
-{
-      "title": {
-        "role": "link",
-        "tf623_id": "748",
-        "html_tag": "a",
-        "name": "Dark Chocolate Ginger",
-        "attributes": {
-          "href": "/products/dark-chocolate-ginger",
-          "class": "product-item-meta__title"
-        }
-      },
-      "price": {
-        "role": "text",
-        "tf623_id": "753",
-        "html_tag": "span",
-        "name": "\u00a35.00",
-        "attributes": {}
-      }
-}
-```
-when trying to get the product name and price using the query_data method, it stucks and doesn't stop (maybe it takes too long to process).
-instead of query_data method, i used to_data() method to get the product name and price from the product element.
+for the products,
 it worked as expected.
 
-code:
-```python
-# Use query_data() method to fetch the products from the page
-        response = page.query_elements(PRODUCTS_QUERY)
-
-        print(response.to_data())
-```
 ouput :
 ```
-{'currency': 'United Kingdom (GBP £)', 
-'product_items': [{'title': '2.5kg Bulk 41% Milk Hot Chocolate Drops', 'price': '£45.00'}, 
-{'title': '2.5kg Bulk 61% Dark Hot Chocolate Drops', 'price': '£45.00'}, 
-{'title': '41% Milk Hot Chocolate Drops', 'price': '£8.75'}, 
-{'title': '61% Dark Hot Chocolate Drops', 'price': '£8.75'}] 
+{'currency': '£',
+ 'product_items': [
+    {'title': '2.5kg Bulk 41% Milk Hot Chocolate Drops', 'price': '45.00'}, 
+    {'title': '2.5kg Bulk 61% Dark Hot Chocolate Drops', 'price': '45.00'},
+    ]
 }
 ```
 
@@ -349,7 +322,9 @@ AgentQL proves to be a robust and intuitive tool for web scraping and automation
 
 While I encountered a challenge with removing items from the basket due to the element being outside the viewport and only visible upon hover, this highlights an edge case that could benefit from refinement.
 
-Beyond the initial script, I tested AgentQL on various websites, including those in different languages, such as Jumia (Arabic), YouTube, and the Chocolate Society website. In most cases, the tool performed well, extracting data and interacting with elements as expected. However, the `query_data()` method occasionally stalled on certain websites. Switching to the `to_data()` method proved to be a reliable alternative and resolved the issue consistently.
+sometimes the query can be confusing for the agentQL to get the correct data.
+
+Beyond the initial script, I tested AgentQL on various websites, including those in different languages, such as Jumia (Arabic), YouTube, and the Chocolate Society website. In most cases, the tool performed well, extracting data and interacting with elements as expected. However, the `query_data()` method occasionally stalled on certain websites (i think its due to internet speed). Switching to the `to_data()` method proved to be a reliable alternative and resolved the issue consistently.
 
 In summary, AgentQL offers a powerful solution for web automation and scraping across various platforms and languages. While there are some edge cases that could benefit from optimization, its overall performance, ease of use, and versatility make it an excellent tool for developers. I'm eager to continue exploring its capabilities and potential in more complex scenarios.
 

@@ -26,14 +26,13 @@ def main():
 
         page.goto(URL)
         
-        # page_title = page.query_elements(PAGE_TITLE_QUERY)
-        # page_title = page.get_by_prompt(PAGE_TITLE_PROMPT)
-        # print(page_title)
+        page_title = page.get_by_prompt(PAGE_TITLE_PROMPT)
+        print(page_title.text_content())
 
         # Use query_data() method to fetch the products from the page
-        response = page.query_elements(PRODUCTS_QUERY)
+        response = page.query_data(PRODUCTS_QUERY)
 
-        print(response.to_data())
+        print(response)
         
 if __name__ == "__main__":
     main()

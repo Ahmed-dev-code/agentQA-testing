@@ -73,10 +73,10 @@ def main():
         # print(product_data.to_data())
         
         # Extract the categories using the AgentQL query
-        languages = page.query_elements(LANGUAGES_QUERY)
+        languages = page.query_data(LANGUAGES_QUERY)
     
         # Print the extracted data
-        print(languages.to_data())
+        print(languages)
 
 
 if __name__ == "__main__":
