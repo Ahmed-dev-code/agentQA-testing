@@ -1,6 +1,5 @@
 import agentql
-from agentql.ext.playwright.sync_api import Page
-
+import json
 # Import the synchronous playwright library
 # This library is used to launch the browser and interact with the web page
 from playwright.sync_api import sync_playwright
@@ -60,20 +59,21 @@ def main():
         page.wait_for_timeout(500)
         # Use the AgentQL query to locate the search box element
         search_box = page.query_elements(SEARCH_BOX_QUERY)
-        print(search_box)
 
-        # # Type the search query into the search box
-        # search_box.search_products_input.type("حذاء رجال")
-        # page.keyboard.press("Enter")
+        # Type the search query into the search box
+        search_box.search_products_input.type("حذاء رجال")
+        page.keyboard.press("Enter")
 
-        # # # Extract the product data using the AgentQL query
-        # product_data = page.query_elements(ARTICLE_DATA_QUERY)
-
-        # # # Print the extracted data
-        # print(product_data.to_data())
+        # # Extract the product data using the AgentQL query
+        product_data = page.query_data(ARTICLE_DATA_QUERY)
+        
+        # Write the JSON data to a file
+        with open('jumia_products.json', 'w', encoding='utf-8') as file:
+            json.dump(product_data, file, ensure_ascii=False, indent=4)
         
         # Extract the categories using the AgentQL query
         languages = page.query_data(LANGUAGES_QUERY)
+        
     
         # Print the extracted data
         print(languages)

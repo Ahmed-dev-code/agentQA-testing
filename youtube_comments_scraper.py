@@ -1,5 +1,6 @@
 import agentql
 from playwright.sync_api import sync_playwright
+import json
 
 URL = "https://www.youtube.com/watch?v=8Zi_8-9f7xk"
 
@@ -33,6 +34,9 @@ def get_comments():
         # Use query_data() method to fetch the comments from the page
         response = page.query_data(QUERY)
 
+        # Write the JSON data to a file
+        with open('youtube_comments.json', 'w', encoding='utf-8') as file:
+            json.dump(response, file, ensure_ascii=False, indent=4)
 
         return response
 

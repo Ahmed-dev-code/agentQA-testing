@@ -1,0 +1,101 @@
+{
+    "currency": "£",
+    "product_items": [
+        {
+            "title": "2.5kg Bulk 41% Milk Hot Chocolate Drops",
+            "price": "45.00"
+        },
+        {
+            "title": "2.5kg Bulk 61% Dark Hot Chocolate Drops",
+            "price": "45.00"
+        },
+        {
+            "title": "Milk hot chocolate drops",
+            "price": "8.75"
+        },
+        {
+            "title": "Dark hot chocolate drops hot drinks caffeine free",
+            "price": "8.75"
+        },
+        {
+            "title": "70% Dark Hot Chocolate Flakes",
+            "price": "9.95"
+        },
+        {
+            "title": "Almost Perfect",
+            "price": "From 3.00"
+        },
+        {
+            "title": "Assorted Chocolate Malt Balls",
+            "price": "9.00"
+        },
+        {
+            "title": "Blonde Caramel",
+            "price": "5.00"
+        },
+        {
+            "title": "Blonde Chocolate Honeycomb - Bag",
+            "price": "8.50"
+        },
+        {
+            "title": "Blonde Chocolate Malt Balls",
+            "price": "9.00"
+        },
+        {
+            "title": "Blonde Chocolate Truffles",
+            "price": "19.95"
+        },
+        {
+            "title": "Blonde Hot Chocolate Flakes",
+            "price": "9.95"
+        },
+        {
+            "title": "Bulk 41% Milk Hot Chocolate Drops 750 grams",
+            "price": "17.50"
+        },
+        {
+            "title": "Bulk 61% Dark Hot Chocolate Drops 750 grams",
+            "price": "17.50"
+        },
+        {
+            "title": "Caramelised Milk",
+            "price": "5.00"
+        },
+        {
+            "title": "Chai Caramel Latte",
+            "price": "5.00"
+        },
+        {
+            "title": "Chocolate Caramelised Pecan Nuts",
+            "price": "8.95"
+        },
+        {
+            "title": "Chocolate Celebration Hamper",
+            "price": "55.00"
+        },
+        {
+            "title": "Christmas Cracker",
+            "price": "5.00"
+        },
+        {
+            "title": "Cinnamon Toast",
+            "price": "5.00"
+        },
+        {
+            "title": "Collection of 4 of our Best Selling Chocolate Malt Balls",
+            "price": "30.00"
+        },
+        {
+            "title": "Colombia 61%",
+            "price": "5.00"
+        },
+        {
+            "title": "Crunchy Biscuit",
+            "price": "5.00"
+        },
+        {
+            "title": "Dark Chocolate Ginger",
+            "price": "5.00"
+        }
+    ]
+}

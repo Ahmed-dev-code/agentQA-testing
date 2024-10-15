@@ -1,5 +1,6 @@
 import agentql
-from playwright.sync_api import sync_playwright
+from playwright.sync_api import sync_playwright 
+import json
 
 URL ="https://www.chocolate.co.uk/collections/all"
 
@@ -33,6 +34,10 @@ def main():
         response = page.query_data(PRODUCTS_QUERY)
 
         print(response)
+        
+        # Write the JSON data to a file
+        with open('chocolate_products.json', 'w', encoding='utf-8') as file:
+            json.dump(response, file, ensure_ascii=False, indent=4)
         
 if __name__ == "__main__":
     main()
