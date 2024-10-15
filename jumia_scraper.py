@@ -64,6 +64,8 @@ def main():
         search_box.search_products_input.type("حذاء رجال")
         page.keyboard.press("Enter")
 
+        page.wait_for_timeout(3000)
+
         # # Extract the product data using the AgentQL query
         product_data = page.query_data(ARTICLE_DATA_QUERY)
         
